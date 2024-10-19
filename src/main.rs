@@ -73,6 +73,7 @@ fn start_interface() {
     let mut departments: HashMap<String, Vec<String>> = HashMap::new();
 
     loop {
+        println!();
         println!("Add, List, or Delete? ('exit' to quit): ");
 
         let input = get_input();
@@ -112,6 +113,12 @@ fn add_employee(departments: &mut HashMap<String, Vec<String>>){
     employees.push(name);
 }
 
+fn print_departments(departments: &HashMap<String, Vec<String>>){
+    for dept in departments.keys() {
+        println!("{dept}");
+    }
+}
+
 fn list_employees(departments: &mut HashMap<String, Vec<String>>){
     println!("List all people in a department (1) or all people in the company by department (2)?");
 
@@ -120,9 +127,7 @@ fn list_employees(departments: &mut HashMap<String, Vec<String>>){
     match input.trim().parse::<i32>() {
         Ok(1) => {
             println!("Which department?");
-            for dept in departments.keys() {
-                println!("{dept}");
-            }
+            print_departments(departments);
 
             let department = get_input();
 
@@ -152,15 +157,30 @@ fn list_employees(departments: &mut HashMap<String, Vec<String>>){
 
 fn delete_employee(departments: &mut HashMap<String, Vec<String>>){
     println!("Which department?");
+    print_departments(departments);
+    println!();
 
     let dept = get_input();
 
+    let employee_list: &mut Vec<String> = match departments.get_mut(&dept) {
+        Some(employees) => {
+            employees.sort();
+            employees
+        },
+        None => {
+            println!("{dept} not found.");
+            &mut Vec::new()
+        }
+    };
+
+    if employee_list.is_empty() {
+        return;
+    }
+    
     println!("Which employee?");
+    println!("{:#?}", &employee_list);
 
     let name = get_input();
-    
-    let default = Vec::new();
-    let mut employee_list = departments.get(&dept).unwrap_or(&default).to_vec();
 
     if !employee_list.is_empty() {
         match employee_list.binary_search(&name) {
