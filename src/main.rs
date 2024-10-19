@@ -128,6 +128,7 @@ fn list_employees(departments: &mut HashMap<String, Vec<String>>){
         Ok(1) => {
             println!("Which department?");
             print_departments(departments);
+            println!();
 
             let department = get_input();
 
@@ -139,7 +140,6 @@ fn list_employees(departments: &mut HashMap<String, Vec<String>>){
                 None => &mut Vec::new()
             };
 
-            println!("{department}");
             println!("{:#?}", &list);
         },
         Ok(2) => {
