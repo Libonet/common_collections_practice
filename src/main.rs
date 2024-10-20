@@ -63,7 +63,12 @@ fn pig_latin(word: &str) -> Option<String> {
         s.push_str("-hay");
         Some(s)
     } else {
-        let s = format!("{}-{}ay", &word[1..], &word[0..1]);
+        let mut letters = word.chars();
+        let first_letter = letters.next().expect("Word should not be empty");
+
+        let rest = &word[first_letter.len_utf8()..];
+
+        let s = format!("{}-{}ay", rest, first_letter);
         Some(s)
     }
 }
