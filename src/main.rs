@@ -15,16 +15,16 @@ fn median_mode(list: &[i32]) -> Option<(f32, i32)> {
         return None;
     }
 
-    let mut vector = Vec::new();
     let mut counts = HashMap::new();
 
-    for elem in list {
-        vector.push(*elem);
+    let mut vector: Vec<i32> = list.iter().map(|elem| {
         let count = counts.entry(elem).or_insert(0);
         *count += 1;
-    }
+        *elem
+    }).collect();
 
     vector.sort();
+
     let median: f32 = {
         let pos = vector.len() / 2;
         let half = *vector.get(pos).expect("value should exist") as f32;
@@ -36,13 +36,8 @@ fn median_mode(list: &[i32]) -> Option<(f32, i32)> {
         }
     };
 
-    let mut mode = vector.first().expect("Vec should be populated");
+    let (_, mode) = counts.iter().max_by(|(_,v1),(_,v2)| v1.cmp(v2)).expect("HashMap should be populated");
 
-    for (k, v) in &counts {
-        if v > counts.get(mode).expect("HashMap should be populated") {
-            mode = k;
-        }
-    }
     Some((median, *mode))
 }
 
