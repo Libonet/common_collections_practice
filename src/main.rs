@@ -16,12 +16,14 @@ fn median_mode(list: &[i32]) -> Option<(f32, i32)> {
     }
 
     let mut counts = HashMap::new();
+    let mut vector = Vec::new();
+    
+    for elem in list {
+        vector.push(elem);
 
-    let mut vector: Vec<&i32> = list.iter().map(|elem| {
         let count = counts.entry(elem).or_insert(0);
         *count += 1;
-        elem
-    }).collect();
+    }
 
     vector.sort();
 
