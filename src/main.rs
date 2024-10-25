@@ -17,28 +17,28 @@ fn median_mode(list: &[i32]) -> Option<(f32, i32)> {
 
     let mut counts = HashMap::new();
 
-    let mut vector: Vec<i32> = list.iter().map(|elem| {
+    let mut vector: Vec<&i32> = list.iter().map(|elem| {
         let count = counts.entry(elem).or_insert(0);
         *count += 1;
-        *elem
+        elem
     }).collect();
 
     vector.sort();
 
     let median: f32 = {
         let pos = vector.len() / 2;
-        let half = *vector.get(pos).expect("value should exist") as f32;
+        let half = **vector.get(pos).expect("value should exist") as f32;
 
         if vector.len() % 2 != 0 || pos == 0 {
             half
         } else {
-            (half + *vector.get(pos-1).expect("value should exist") as f32) / 2.0
+            (half + **vector.get(pos-1).expect("value should exist") as f32) / 2.0
         }
     };
 
-    let (_, mode) = counts.iter().max_by(|(_,v1),(_,v2)| v1.cmp(v2)).expect("HashMap should be populated");
+    let (mode, _) = counts.iter().max_by(|(_,v1),(_,v2)| v1.cmp(v2)).expect("HashMap should be populated");
 
-    Some((median, *mode))
+    Some((median, **mode))
 }
 
 
